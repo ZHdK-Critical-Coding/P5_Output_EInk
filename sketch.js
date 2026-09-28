@@ -6,7 +6,7 @@ const display = {
 
 let socket;                 // WebSocket-Objekt
 let displayState = 'not ok' // Statusanzeige der Verbindung
-let img                     // (aktuell nicht genutzt, reserviert für Bilder)
+let statusLabel             // HTML-Element für den Status (unter dem Canvas, wird nicht gesendet)
 let count = 0               // Zähler, wird bei Mausklick erhöht
 
 // Funktion zum Senden eines Frames über den WebSocket
@@ -46,6 +46,10 @@ function setup() {
   socket.onclose = () => {
     console.log("Connection closed");
   };
+
+  // Statusanzeige als HTML-Text unter dem Canvas
+  statusLabel = createP(displayState)
+  statusLabel.style('margin', '10px')
 }
 
 // Draw-Funktion (wird kontinuierlich ausgeführt, ca. 60x pro Sekunde)
@@ -74,6 +78,9 @@ function draw() {
   textSize(100)
   textAlign(CENTER)
   text(count, width / 2, height / 2 + 35)
+
+  // Verbindungsstatus anzeigen (ausserhalb des Canvas, damit er nicht auf dem Display landet)
+  statusLabel.html(displayState)
 }
 
 // Event: Mausklick

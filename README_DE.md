@@ -15,6 +15,13 @@ Voraussetzungen: ein Raspberry Pi mit einem Waveshare-4.2"-E-Paper-Display
 [Servers_RaspberriPi](https://github.com/ZHdK-Critical-Coding/Servers_RaspberriPi)
 läuft (Port 8765), und ein Browser im selben Netzwerk.
 
+Bibliotheken (in `libraries/`): p5.js 1.10.0, p5.sound 1.0.1 (eingebunden,
+nicht verwendet).
+
+Lizenz: MIT
+
+## Ausführen
+
 1. Den Server auf dem Pi starten. Das Display zeigt seine Adresse.
 2. Diese Adresse oben in `sketch.js` bei `displayConnection` eintragen,
    z. B. `ws://192.168.138.96:8765`.
@@ -23,25 +30,21 @@ läuft (Port 8765), und ein Browser im selben Netzwerk.
 4. In die Zeichenfläche klicken. Der Zähler steigt und der Frame wird
    gesendet. Ein E-Ink-Refresh dauert einige Sekunden.
 
-Bibliotheken (in `libraries/`): p5.js 1.10.0, p5.sound 1.0.1 (eingebunden,
-nicht verwendet).
-
-Lizenz: MIT
-
 ## Coding-Hilfe
 
 - **`sketch.js` → `displayConnection`, `display`**: Server-Adresse und
   Grösse der Zeichenfläche (400 × 300, die Grösse des Displays).
 - **`setup()`**: erstellt die Zeichenfläche mit `pixelDensity(1)` und
   `noSmooth()` und öffnet den WebSocket. Verbindungsstatus und
-  Server-Nachrichten landen in `displayState` (wird nicht gezeichnet – bei
-  Bedarf in `draw()` ausgeben).
+  Server-Nachrichten landen in `displayState` und werden in einer
+  Textzeile (`statusLabel`) unter der Zeichenfläche angezeigt.
 - **`sendFrame()`**: kodiert die Zeichenfläche als PNG und schickt sie, wenn
   der Socket offen ist. Der Server skaliert sie aufs Display und wandelt sie
   in Graustufen um.
 - **`draw()`**: Rahmen, Diagonalen, vier graue konzentrische Kreise und der
-  Zähler in der Mitte. Schwarz, Weiss und wenige Grautöne verwenden – das
-  Display zeigt nur vier Stufen.
+  Zähler in der Mitte, dazu wird die Statuszeile aktualisiert (ein
+  HTML-Element, sie wird also nicht ans Display geschickt). Schwarz, Weiss
+  und wenige Grautöne verwenden – das Display zeigt nur vier Stufen.
 - **`mousePressed()`**: erhöht `count` und schickt den nächsten Frame.
   Frames werden nur hier gesendet, nicht in jedem Frame; `sendFrame()`
   anderswo aufrufen, um bei anderen Ereignissen zu aktualisieren.
