@@ -1,38 +1,46 @@
-# WebSocket Display Sender
+# P5.js: E-Ink
 
-Dieses Projekt zeigt, wie man mit **p5.js** Inhalte eines Canvas an einen **WebSocket-Server** überträgt.  
-Der Benutzer kann durch Mausklicks den Zähler erhöhen, und der aktuelle Frame wird als PNG-Bild an den Server gesendet.  
+[Deutsch](README_DE.md)
 
-## Features
+Sends the canvas of a p5 sketch as a PNG over a WebSocket to a Raspberry
+Pi, which shows it on a Waveshare 4.2" e-ink display in four grey levels.
+Each mouse click raises a counter and sends a new frame. A starting point
+for slow, paper-like displays that only update now and then.
 
-- Verbindung zu einem WebSocket-Server aufbauen
-- Canvas mit p5.js rendern (400 × 300 Pixel)
-- Senden von Frames als PNG-Binärdaten
-- Interaktiver Zähler (erhöht sich bei Mausklick)
-- Darstellung von Formen (Rahmen, Diagonalen, konzentrische Kreise)
-- Statusmeldungen aus der WebSocket-Verbindung
+## Installation
 
-## Voraussetzungen
+Requirements: a Raspberry Pi with a Waveshare 4.2" e-paper display (SPI)
+running `screen-websocket` from
+[Servers_RaspberriPi](https://github.com/ZHdK-Critical-Coding/Servers_RaspberriPi)
+(port 8765), and a browser on the same network.
 
-- Node.js / Browser mit WebSocket-Unterstützung
-- Ein laufender WebSocket-Server unter `ws://192.168.138.96:8765`
+1. Start the server on the Pi. The display shows its address.
+2. Enter that address in `displayConnection` at the top of `sketch.js`,
+   e.g. `ws://192.168.138.96:8765`.
+3. Open the folder in Visual Studio Code and start Live Server (click
+   **Go Live** in the status bar).
+4. Click into the canvas. The counter goes up and the frame is sent. An
+   e-ink refresh takes a few seconds.
 
-## Verwendung
+Libraries (in `libraries/`): p5.js 1.10.0, p5.sound 1.0.1 (included, not
+used).
 
-- Starte den WebSocket-Server.
-- Öffne die HTML-Seite mit dem eingebundenen Skript.
-- Klicke mit der Maus in das Canvas:
-  - Der Zähler in der Mitte erhöht sich.
-  - Der aktuelle Frame wird als PNG an den Server geschickt.
+License: MIT
 
-## Beispiel-Animation
+## Coding Help
 
-Die Demo zeigt:
-
-- Einen Rahmen mit Diagonalen
-- Vier konzentrische Kreise in Graustufen
-- Einen Zähler in der Mitte (schwarz, groß dargestellt)
-
-## Lizenz
-
-MIT License
+- **`sketch.js` → `displayConnection`, `display`**: server address and
+  canvas size (400 × 300, the size of the display).
+- **`setup()`**: creates the canvas with `pixelDensity(1)` and
+  `noSmooth()` and opens the WebSocket. Connection state and server
+  messages are stored in `displayState` (not drawn — print it in `draw()`
+  if you need it).
+- **`sendFrame()`**: encodes the canvas as PNG and sends it if the socket
+  is open. The server resizes it to the display and converts it to grey
+  levels.
+- **`draw()`**: frame, diagonals, four grey concentric circles and the
+  counter in the middle. Use black, white and a few greys — the display
+  shows only four levels.
+- **`mousePressed()`**: raises `count` and sends the next frame. Frames
+  are only sent here, not every frame; call `sendFrame()` elsewhere to
+  update on other events.
