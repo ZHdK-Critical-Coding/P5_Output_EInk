@@ -9,19 +9,27 @@ for slow, paper-like displays that only update now and then.
 
 ## Installation
 
-Requirements: a Raspberry Pi with a Waveshare 4.2" e-paper display (SPI)
-running `screen-websocket` from
-[Servers_RaspberriPi](https://github.com/ZHdK-Critical-Coding/Servers_RaspberriPi)
-(port 8765), and a browser on the same network.
+Requirements: a browser on the same network as the Pi (see Server).
 
 Libraries (in `libraries/`): p5.js 1.10.0, p5.sound 1.0.1 (included, not
 used).
 
 License: MIT
 
+## Server
+
+Needs `screen-websocket` from
+[Servers_RaspberriPi](https://github.com/ZHdK-Critical-Coding/Servers_RaspberriPi),
+running on a Raspberry Pi with a Waveshare 4.2" e-paper display on SPI
+(enable SPI in `sudo raspi-config`), port 8765. Start it first with
+`python screen.py` in the folder on the Pi (there is no `run.sh`); the
+display shows its address. It takes a PNG, resizes it to 400 × 300 and
+shows it in four grey levels; it sends no answer. Put its address in
+`displayConnection` at the top of `sketch.js`.
+
 ## How to Run
 
-1. Start the server on the Pi. The display shows its address.
+1. Start the server on the Pi (see Server). The display shows its address.
 2. Enter that address in `displayConnection` at the top of `sketch.js`,
    e.g. `ws://192.168.138.96:8765`.
 3. Open the folder in Visual Studio Code and start Live Server (click
